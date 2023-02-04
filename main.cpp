@@ -21,23 +21,8 @@ void Adress::get_out(std::ofstream& output) {
 	output << city << ", " << strt << ", " << bldng << ", " << aptmt << '\n';
 }
 
-void bubble(std::string* arr, int size) {
-	bool temp;
-	do {
-		temp = false;
-		for (int i = 0; i < size; i++) {
-			if(arr[i] > arr[i + 1]) {
-				std::string swap = arr[i];
-				arr[i] = arr[i + 1];
-				arr[i + 1] = swap;
-				temp = true;
-			}
-		}
-	} while(temp == true);
-}
-
 template <typename T>
-void wipe(T arr) {
+void wipe(T& arr) {
 	delete[] arr;
 	arr = nullptr;
 }
@@ -53,27 +38,27 @@ int main(int argc, char** argv) {
 		adresses[i].set(input);
 	}
 
-	std::string* arr = new std::string[total];
+	bool temp;
+	do {
+		temp = false;
+		for (int i = 1; i < total; i++) {
+			if (adresses[i - 1].get_city() > adresses[i].get_city()) {
+				Adress swap = adresses[i - 1];
+				adresses[i - 1] = adresses[i];
+				adresses[i] = swap;
+				temp = true;
+			}
+		}
+	} while (temp == true);
 
-	for (int i = 0; i < total; i++) {
-		arr[i] = adresses[i].get_city();
-	}
-
-	bubble(arr, total);
-
-	for (int i = 0; i < total; i++) {
-		std::cout << arr[i] << '\n';
-	}
-
-	wipe(adresses);
-	wipe(arr);
-
-	/*std::ofstream output("out.txt");
+	std::ofstream output("out.txt");
 	output << total << '\n';
 
 	for (int i = 0; i < total; i++) {
 		adresses[i].get_out(output);
-	}*/
+	}
+
+	wipe(adresses);
 
 	return 0;
 }
